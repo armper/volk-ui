@@ -1,0 +1,9 @@
+<form>
+  <mat-form-field>
+    <input matInput name="name" [(ngModel)]="name" (keyup)="search(name)">
+  </mat-form-field>
+</form>
+
+<mat-nav-list>
+  <a mat-list-item routerLink="/searchuser/{{user.id}}" *ngFor="let user of users  | async"> {{ user.domainName }}: {{ user.name }} </a>
+</mat-nav-list>
