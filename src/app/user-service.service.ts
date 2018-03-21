@@ -9,20 +9,31 @@ import { catchError, map, tap } from 'rxjs/operators';
 export class UserServiceService {
 
   private searchUsersUrl = 'http://localhost:8091/searchuser/';
+
   constructor(
     private http: HttpClient
-  ) { }
+  ) {}
 
   searchUsers(term: string): Observable<User[]> {
-    console.log("searching "+term);
+    console.log(`searching ` + term);
     return this.http.get<User[]>(this.searchUsersUrl, {
       params: {
         name: term
       }
     })
       .pipe(
-      tap(users => users.forEach(u => console.log(`fetched user` + u.id))),
-      catchError(this.handleError('getUsers', []))
+        tap(users => users.forEach(u => console.log(`fetched user: ` + u.name))),
+        catchError(this.handleError('getUsers', []))
+      );
+  }
+
+  getUser(id: string): Observable<User> {
+    console.log(`searching ` + id);
+
+    return this.http.get<User>(`${this.searchUsersUrl}${id}`)
+      .pipe(
+        tap(_ => console.log(`fetched hero id=${id}`)),
+        catchError(this.handleError<User>(`getUser id=${id}`))
       );
   }
 
