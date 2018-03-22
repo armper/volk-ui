@@ -15,14 +15,10 @@ import { User } from '../user';
 
 export class UserDetailComponent implements OnInit {
   user: User;
-  files: SearchFile[];
-  displayedColumns = ['path', 'fileName'];
-  dataSource = this.files;
 
   constructor(
     private route: ActivatedRoute,
     private userService: UserServiceService,
-    private fileService: FileService
   ) { }
 
   ngOnInit() {
@@ -34,11 +30,6 @@ export class UserDetailComponent implements OnInit {
     this.userService.getUser(id)
       .subscribe(user => {
         this.user = user;
-        this.fileService.searchFiles(user.id)
-          .subscribe(files => {
-            this.files = files;
-            console.log(files.length);
-          });
       });
   }
 }

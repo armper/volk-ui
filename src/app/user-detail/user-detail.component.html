@@ -4,30 +4,11 @@
     <mat-card-subtitle>{{user.domainName}}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <!--this can be a component of it's own-->
-    <p>
-      Number of files: 50
-    </p>
-    <p>
+     <p>
       Deleted items past week: 10
     </p>
   </mat-card-content>
 
-  <mat-table #table [dataSource]="files">
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="path">
-      <mat-header-cell *matHeaderCellDef> path </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.path}} </mat-cell>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="fileName">
-      <mat-header-cell *matHeaderCellDef> fileName </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.fileName}} </mat-cell>
-    </ng-container>
-
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-  </mat-table>
 </mat-card>
+
+<app-files-grid [user]="user"></app-files-grid>

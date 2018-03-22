@@ -1,3 +1,25 @@
-<p>
-  files-grid works!
-</p>
+<mat-card class="files-card">
+    <mat-card-header>
+
+  <mat-card-title>{{files.length}} Files</mat-card-title>
+
+</mat-card-header>
+  <mat-table #table [dataSource]="files">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="path">
+      <mat-header-cell *matHeaderCellDef> path </mat-header-cell>
+      <mat-cell *matCellDef="let file"> {{file.path}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="fileName">
+      <mat-header-cell *matHeaderCellDef> fileName </mat-header-cell>
+      <mat-cell *matCellDef="let file"> {{file.fileName}} </mat-cell>
+    </ng-container>
+
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+</mat-card>
