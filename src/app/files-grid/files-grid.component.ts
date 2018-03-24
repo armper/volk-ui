@@ -9,9 +9,9 @@ import { User } from '../user';
   styleUrls: ['./files-grid.component.css']
 })
 export class FilesGridComponent implements OnChanges {
-  @Input() user: User = new User();
+  @Input() user: User;
 
-  private files: Array<SearchFile> = new Array<SearchFile>();
+  files: SearchFile[] = new Array<SearchFile>();
 
   private displayedColumns = ['path', 'fileName'];
 
@@ -19,11 +19,9 @@ export class FilesGridComponent implements OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges) {
+
     if (this.user != null) {
-      this.fileService.searchFiles(this.user.id)
-        .subscribe(files => {
-          this.files = files;
-        });
+      this.files = this.user.searchFiles;
     }
   }
 }

@@ -32,7 +32,7 @@ export class UserServiceService {
 
     return this.http.get<User>(`${this.searchUsersUrl}${id}`)
       .pipe(
-        tap(_ => console.log(`fetched hero id=${id}`)),
+        tap(_ => console.log(`fetched user id=${id}`)),
         catchError(this.handleError<User>(`getUser id=${id}`))
       );
   }
