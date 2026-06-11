@@ -14,6 +14,16 @@ export interface SearchFile {
   keywords: string | null;
   comments: string | null;
   contentType: string | null;
+  sourceId?: string | null;
+  sourceName?: string | null;
+  sourceType?: string | null;
+  sourceRoot?: string | null;
+  relativePath?: string | null;
+  contentOwner?: string | null;
+  ownershipBasis?: string | null;
+  department?: string | null;
+  accessContextRoot?: string | null;
+  sourceAccessSummary?: string | null;
   fileOwner?: string | null;
   fileGroup?: string | null;
   posixPermissions?: string | null;

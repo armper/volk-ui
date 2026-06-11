@@ -29,6 +29,12 @@ describe('FilesGridComponent', () => {
         keywords: null,
         comments: null,
         contentType: null,
+        sourceName: 'Finance records',
+        sourceType: 'SHARED_DRIVE',
+        contentOwner: 'Controller team',
+        ownershipBasis: 'SOURCE_PROFILE',
+        department: 'Finance',
+        relativePath: 'annual/test.docx',
       },
     ];
 
@@ -39,6 +45,10 @@ describe('FilesGridComponent', () => {
     expect(text).toContain('test.docx');
     expect(text).toContain('Volk Test Document');
     expect(text).toContain('Armando Perea');
+    expect(text).toContain('Finance records');
+    expect(text).toContain('Controller team');
+    expect(text).toContain('Finance');
+    expect(text).toContain('annual/test.docx');
     expect(text).toContain('2 KB');
   });
 });

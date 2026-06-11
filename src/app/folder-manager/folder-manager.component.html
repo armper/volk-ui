@@ -39,19 +39,32 @@
               <span class="folder-icon"><mat-icon>folder_special</mat-icon></span>
               <div class="watched-copy">
                 <div class="folder-title-line">
-                  <h3>{{ folderName(folder.path) }}</h3>
+                  <h3>{{ folder.sourceName }}</h3>
                   <span class="live-badge"><i></i>{{ folder.status === 'Started' ? 'Watching' : folder.status }}</span>
                 </div>
                 <code>{{ folder.path }}</code>
-                <p>
-                  <mat-icon>{{ folder.recursive ? 'account_tree' : 'horizontal_rule' }}</mat-icon>
-                  {{ folder.recursive ? 'Includes all subfolders' : 'This folder only' }}
-                </p>
+                <div class="source-summary">
+                  <span><mat-icon>database</mat-icon>{{ sourceTypeLabel(folder.sourceType) }}</span>
+                  @if (folder.department) {
+                    <span><mat-icon>corporate_fare</mat-icon>{{ folder.department }}</span>
+                  }
+                  @if (folder.sourceOwner) {
+                    <span><mat-icon>badge</mat-icon>{{ folder.sourceOwner }}</span>
+                  }
+                  <span>
+                    <mat-icon>{{ folder.recursive ? 'account_tree' : 'horizontal_rule' }}</mat-icon>
+                    {{ folder.recursive ? 'Includes subfolders' : 'This folder only' }}
+                  </span>
+                </div>
               </div>
-              <button class="stop-button" type="button" (click)="removeFolder(folder)" title="Stop watching this folder">
-                <mat-icon>remove_circle_outline</mat-icon>
-                <span>Stop</span>
-              </button>
+              <div class="folder-actions">
+                <button class="edit-button" type="button" (click)="browse(folder.path)" title="Edit source details">
+                  <mat-icon>edit</mat-icon><span>Edit</span>
+                </button>
+                <button class="stop-button" type="button" (click)="removeFolder(folder)" title="Stop watching this folder">
+                  <mat-icon>remove_circle_outline</mat-icon><span>Stop</span>
+                </button>
+              </div>
             </article>
           }
         </div>
@@ -115,6 +128,43 @@
         }
       </div>
 
+      <section class="source-profile" aria-labelledby="source-profile-title">
+        <div class="source-profile-heading">
+          <span><mat-icon>hub</mat-icon></span>
+          <div>
+            <h3 id="source-profile-title">Describe this document source</h3>
+            <p>These details appear on every document found here.</p>
+          </div>
+        </div>
+
+        <div class="source-fields">
+          <label>
+            <span>Source name</span>
+            <input [(ngModel)]="sourceName" name="sourceName" placeholder="Example: Finance policies" maxlength="120" />
+          </label>
+          <label>
+            <span>What kind of source is it?</span>
+            <select [(ngModel)]="sourceType" name="sourceType">
+              @for (type of sourceTypes; track type.value) {
+                <option [value]="type.value">{{ type.label }}</option>
+              }
+            </select>
+          </label>
+          <label>
+            <span>Department or team <small>Optional</small></span>
+            <input [(ngModel)]="department" name="department" placeholder="Example: Finance" maxlength="120" />
+          </label>
+          <label>
+            <span>Responsible owner <small>Optional</small></span>
+            <input [(ngModel)]="sourceOwner" name="sourceOwner" placeholder="Person or team" maxlength="120" />
+          </label>
+        </div>
+        <p class="owner-fallback">
+          <mat-icon>auto_awesome</mat-icon>
+          Leave the owner blank and Volk will use the document author, then the filesystem owner as a fallback.
+        </p>
+      </section>
+
       <div class="selection-footer">
         <label class="recursive-option">
           <input type="checkbox" [(ngModel)]="recursive" name="recursive" />
@@ -128,10 +178,10 @@
           class="watch-button"
           type="button"
           (click)="addCurrentFolder()"
-          [disabled]="!listing || saving || isWatching(listing.path)"
+          [disabled]="!listing || saving || !sourceName.trim()"
         >
-          <mat-icon>{{ isWatching(listing?.path || '') ? 'check' : 'add' }}</mat-icon>
-          {{ isWatching(listing?.path || '') ? 'Already watching' : saving ? 'Starting...' : 'Watch this folder' }}
+          <mat-icon>{{ isWatching(listing?.path || '') ? 'save' : 'add' }}</mat-icon>
+          {{ saving ? 'Saving...' : isWatching(listing?.path || '') ? 'Update source details' : 'Watch this folder' }}
         </button>
       </div>
     </section>

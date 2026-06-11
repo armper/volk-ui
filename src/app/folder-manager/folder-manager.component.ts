@@ -22,6 +22,21 @@ export class FolderManagerComponent implements OnInit {
 
   recursive = true;
 
+  sourceName = '';
+
+  sourceType = 'LOCAL_FOLDER';
+
+  department = '';
+
+  sourceOwner = '';
+
+  readonly sourceTypes = [
+    { value: 'LOCAL_FOLDER', label: 'Folder on this computer' },
+    { value: 'SHARED_DRIVE', label: 'Shared drive' },
+    { value: 'NETWORK_SHARE', label: 'Network share' },
+    { value: 'ARCHIVE', label: 'Archive or records store' },
+  ];
+
   loadingFolders = true;
 
   browsing = true;
@@ -42,6 +57,7 @@ export class FolderManagerComponent implements OnInit {
     this.folderService.list().subscribe({
       next: (folders) => {
         this.watchedFolders = folders;
+        if (this.listing) this.syncSourceProfile(this.listing.path);
         this.loadingFolders = false;
       },
       error: (error) => {
@@ -58,6 +74,7 @@ export class FolderManagerComponent implements OnInit {
       next: (listing) => {
         this.listing = listing;
         this.pathInput = listing.path;
+        this.syncSourceProfile(listing.path);
         this.browsing = false;
       },
       error: (error) => {
@@ -77,9 +94,14 @@ export class FolderManagerComponent implements OnInit {
     this.saving = true;
     this.error = '';
     this.message = '';
-    this.folderService.add(this.listing.path, this.recursive).subscribe({
+    this.folderService.add(this.listing.path, this.recursive, {
+      sourceName: this.sourceName.trim(),
+      sourceType: this.sourceType,
+      department: this.department.trim(),
+      sourceOwner: this.sourceOwner.trim(),
+    }).subscribe({
       next: (folder) => {
-        this.message = `Now watching ${folder.path}`;
+        this.message = `${folder.sourceName} is now tracked as a document source.`;
         this.saving = false;
         this.loadFolders();
       },
@@ -111,6 +133,19 @@ export class FolderManagerComponent implements OnInit {
   folderName(path: string): string {
     const parts = path.split('/').filter(Boolean);
     return parts.at(-1) || path;
+  }
+
+  sourceTypeLabel(type: string): string {
+    return this.sourceTypes.find((sourceType) => sourceType.value === type)?.label || type;
+  }
+
+  private syncSourceProfile(path: string): void {
+    const existing = this.watchedFolders.find((folder) => folder.path === path);
+    this.sourceName = existing?.sourceName || this.folderName(path);
+    this.sourceType = existing?.sourceType || (path.startsWith('/Volumes/') ? 'SHARED_DRIVE' : 'LOCAL_FOLDER');
+    this.department = existing?.department || '';
+    this.sourceOwner = existing?.sourceOwner || '';
+    this.recursive = existing?.recursive ?? true;
   }
 
   private errorMessage(error: unknown, fallback: string): string {

@@ -5,7 +5,19 @@ import { Observable } from 'rxjs';
 export interface WatchFolder {
   path: string;
   recursive: boolean;
+  sourceId: string;
+  sourceName: string;
+  sourceType: string;
+  department: string;
+  sourceOwner: string;
   status: string;
+}
+
+export interface SourceProfile {
+  sourceName: string;
+  sourceType: string;
+  department: string;
+  sourceOwner: string;
 }
 
 export interface DirectoryEntry {
@@ -35,8 +47,8 @@ export class FolderService {
     return this.http.get<DirectoryListing>(`${this.foldersUrl}/browse`, options);
   }
 
-  add(path: string, recursive: boolean): Observable<WatchFolder> {
-    return this.http.post<WatchFolder>(this.foldersUrl, { path, recursive });
+  add(path: string, recursive: boolean, profile: SourceProfile): Observable<WatchFolder> {
+    return this.http.post<WatchFolder>(this.foldersUrl, { path, recursive, ...profile });
   }
 
   remove(path: string): Observable<void> {

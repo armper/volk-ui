@@ -18,20 +18,44 @@
           </div>
         </div>
 
+        @if (file.sourceName) {
+          <div class="source-context" [title]="file.sourceAccessSummary || 'Indexed document source'">
+            <span class="source-mark"><mat-icon>hub</mat-icon></span>
+            <div>
+              <strong>{{ file.sourceName }}</strong>
+              <small>{{ sourceTypeLabel(file.sourceType) }}</small>
+            </div>
+            @if (file.department) {
+              <span class="department-chip">{{ file.department }}</span>
+            }
+          </div>
+        }
+
         <div class="metadata">
-          @if (file.author) {
-            <span><mat-icon>person</mat-icon>{{ file.author }}</span>
+          @if (file.contentOwner) {
+            <span [title]="ownershipLabel(file.ownershipBasis)"><mat-icon>badge</mat-icon>{{ file.contentOwner }}</span>
+          }
+          @if (file.author && file.author !== file.contentOwner) {
+            <span title="Document author"><mat-icon>person</mat-icon>{{ file.author }}</span>
           }
           <span><mat-icon>hard_drive</mat-icon>{{ fileSize(file.size) }}</span>
           <span><mat-icon>schedule</mat-icon>Modified {{ file.lastModified | date: 'MMM d, y' }}</span>
-          @if (file.server) {
-            <span><mat-icon>dns</mat-icon>{{ file.server }}</span>
+          @if (file.fileOwner) {
+            <span title="Filesystem owner"><mat-icon>account_circle</mat-icon>{{ file.fileOwner }}</span>
           }
         </div>
 
         <div class="location">
-          <span class="location-label"><mat-icon>folder_open</mat-icon>File location</span>
-          <code>{{ file.path }}</code>
+          <span class="location-label">
+            <mat-icon>folder_open</mat-icon>
+            {{ file.relativePath ? 'Location inside source' : 'File location' }}
+          </span>
+          @if (file.relativePath) {
+            <code>{{ file.relativePath }}</code>
+            <small>{{ file.path }}</small>
+          } @else {
+            <code>{{ file.path }}</code>
+          }
         </div>
       </article>
     }

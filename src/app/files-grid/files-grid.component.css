@@ -103,6 +103,70 @@
   font-size: 13px;
 }
 
+.source-context {
+  margin-top: 17px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 11px;
+  border: 1px solid #dbe8e4;
+  border-radius: 12px;
+  background: #f4faf7;
+}
+
+.source-mark {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  color: var(--teal-600);
+  background: var(--teal-100);
+}
+
+.source-mark mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
+.source-context div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.source-context strong,
+.source-context small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source-context strong {
+  font-size: 0.72rem;
+}
+
+.source-context small {
+  color: var(--ink-500);
+  font-size: 0.62rem;
+}
+
+.department-chip {
+  max-width: 110px;
+  overflow: hidden;
+  padding: 4px 7px;
+  border-radius: 20px;
+  color: var(--ink-600);
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: white;
+}
+
 .metadata {
   min-height: 66px;
   margin: 20px 0;
@@ -162,6 +226,17 @@
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.68rem;
   line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.location small {
+  margin-top: 5px;
+  display: block;
+  overflow: hidden;
+  color: var(--ink-500);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.59rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

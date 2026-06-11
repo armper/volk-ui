@@ -44,4 +44,23 @@ export class FilesGridComponent {
     if (file.groupReadable || (file.allowedPrincipals?.length ?? 0) > 0) return 'group';
     return 'lock';
   }
+
+  sourceTypeLabel(type: string | null | undefined): string {
+    const labels: Record<string, string> = {
+      LOCAL_FOLDER: 'This computer',
+      SHARED_DRIVE: 'Shared drive',
+      NETWORK_SHARE: 'Network share',
+      ARCHIVE: 'Archive',
+    };
+    return type ? labels[type] || type : 'Document source';
+  }
+
+  ownershipLabel(basis: string | null | undefined): string {
+    const labels: Record<string, string> = {
+      SOURCE_PROFILE: 'Assigned by source',
+      DOCUMENT_METADATA: 'From document metadata',
+      FILESYSTEM_OWNER: 'From filesystem owner',
+    };
+    return basis ? labels[basis] || basis : 'Document owner';
+  }
 }

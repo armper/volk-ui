@@ -14,10 +14,14 @@ only on localhost by default.
 Future shared-server deployments should add organization sign-in/SSO and map that identity
 to these same authorization checks.
 
-## 2. Real ownership and source tracking
+## 2. Real ownership and source tracking - Completed (June 11, 2026)
 
-Record document owner, department, shared drive, source system, and inherited access
-context instead of relying on filesystem ownership alone.
+Each watched folder is now a source profile with a stable ID, friendly name, source type,
+optional department or team, and optional responsible owner. Every indexed document records
+its source root, relative location, source access context, embedded author, filesystem owner,
+and resolved content owner. When no owner is assigned, Volk falls back to document metadata
+and then filesystem ownership. Search results make those distinctions visible instead of
+flattening every kind of ownership into one ambiguous name.
 
 ## 3. Powerful search and filtering
 

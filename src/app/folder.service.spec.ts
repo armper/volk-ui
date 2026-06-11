@@ -19,11 +19,23 @@ describe('FolderService', () => {
   afterEach(() => httpMock.verify());
 
   it('adds a watched folder with the recursive choice', () => {
-    service.add('/tmp/docs', true).subscribe();
+    service.add('/tmp/docs', true, {
+      sourceName: 'Policy library',
+      sourceType: 'SHARED_DRIVE',
+      department: 'Compliance',
+      sourceOwner: 'Records team',
+    }).subscribe();
 
     const request = httpMock.expectOne('http://localhost:8092/api/watch-folders');
     expect(request.request.method).toBe('POST');
-    expect(request.request.body).toEqual({ path: '/tmp/docs', recursive: true });
+    expect(request.request.body).toEqual({
+      path: '/tmp/docs',
+      recursive: true,
+      sourceName: 'Policy library',
+      sourceType: 'SHARED_DRIVE',
+      department: 'Compliance',
+      sourceOwner: 'Records team',
+    });
     request.flush({ path: '/tmp/docs', recursive: true, status: 'Started' });
   });
 });
