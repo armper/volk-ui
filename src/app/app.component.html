@@ -1,9 +1,53 @@
-<header>
-  <mat-toolbar color="primary">
-    <a [routerLink]="['/']">{{ title }}</a>
-  </mat-toolbar>
-</header>
+<div class="app-shell">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" [routerLink]="['/']" aria-label="Volk home">
+        <span class="brand-mark"><mat-icon>travel_explore</mat-icon></span>
+        <span class="brand-copy">
+          <strong>{{ title }}</strong>
+          <small>Document discovery</small>
+        </span>
+      </a>
 
-<main class="app-content">
-  <router-outlet></router-outlet>
-</main>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a
+          class="nav-link"
+          [routerLink]="['/']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <mat-icon>person_search</mat-icon>
+          <span>Find by person</span>
+        </a>
+        <a class="nav-link" [routerLink]="['/files']" routerLinkActive="active">
+          <mat-icon>document_scanner</mat-icon>
+          <span>Search documents</span>
+        </a>
+        <a class="nav-link" [routerLink]="['/folders']" routerLinkActive="active">
+          <mat-icon>folder_managed</mat-icon>
+          <span>Folders</span>
+        </a>
+      </nav>
+
+      <div class="connection-status" title="Document results are filtered by filesystem permissions">
+        <mat-icon>shield_person</mat-icon>
+        @if (accessSession) {
+          <span>{{ accessSession.user }}</span>
+        } @else {
+          <span>Protected</span>
+        }
+      </div>
+    </div>
+  </header>
+
+  <main class="app-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="site-footer">
+    <mat-icon>verified_user</mat-icon>
+    <span>
+      Volk catalogs documents without moving them and only returns files your active account can read.
+    </span>
+  </footer>
+</div>

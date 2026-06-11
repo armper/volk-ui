@@ -1,10 +1,38 @@
-@if (user) {
-  <mat-card class="user-card">
-    <mat-card-header>
-      <mat-card-title>{{ user.name }}</mat-card-title>
-      <mat-card-subtitle>{{ user.domainName }}</mat-card-subtitle>
-    </mat-card-header>
-  </mat-card>
+<section class="page detail-page">
+  <a class="back-link" [routerLink]="['/']">
+    <mat-icon>arrow_back</mat-icon>
+    Back to people
+  </a>
 
-  <app-files-grid [user]="user"></app-files-grid>
-}
+  @if (user) {
+    <header class="person-header">
+      <span class="large-avatar">{{ initials(user.name) }}</span>
+      <div class="person-title">
+        <p class="eyebrow">Documents connected to</p>
+        <h1>{{ user.name }}</h1>
+        <p>
+          <span><mat-icon>corporate_fare</mat-icon>{{ user.domainName || 'Local account' }}</span>
+          <span><mat-icon>description</mat-icon>{{ files.length }} {{ files.length === 1 ? 'document' : 'documents' }}</span>
+        </p>
+      </div>
+    </header>
+
+    <div class="detail-explainer">
+      <mat-icon>info</mat-icon>
+      <p>
+        These are the indexed files associated with this person that your active account can read.
+        Use the file location on each card to find the original.
+      </p>
+    </div>
+  } @else {
+    <div class="profile-loading" aria-label="Loading person details">
+      <span></span><div><i></i><i></i></div>
+    </div>
+  }
+
+  @if (filesLoaded) {
+    <app-files-grid [files]="files"></app-files-grid>
+  } @else {
+    <div class="files-loading" aria-label="Loading documents"><span></span><span></span></div>
+  }
+</section>

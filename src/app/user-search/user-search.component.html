@@ -1,14 +1,85 @@
-<form>
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Search users</mat-label>
-    <input matInput name="name" [(ngModel)]="name" (keyup)="search(name)" placeholder="Start typing a name..." />
-  </mat-form-field>
-</form>
+<section class="page people-page">
+  <div class="page-intro">
+    <p class="eyebrow">Find by person</p>
+    <h1>Whose documents are you looking for?</h1>
+    <p>
+      Search for a person to see every indexed document connected to them, including where each file lives.
+    </p>
+  </div>
 
-<mat-nav-list>
-  @for (user of users$ | async; track user.id) {
-    <a mat-list-item [routerLink]="['/user-detail', user.id]">
-      {{ user.name }} &mdash; {{ user.domainName }}
-    </a>
-  }
-</mat-nav-list>
+  <div class="discovery-layout">
+    <div class="surface-card search-panel">
+      <form (submit)="$event.preventDefault()" aria-label="Find a person">
+        <label class="field-label" for="person-search">Person's name</label>
+        <div class="search-control">
+          <mat-icon>search</mat-icon>
+          <input
+            id="person-search"
+            name="name"
+            [(ngModel)]="name"
+            (input)="search(name)"
+            placeholder="Start typing a name..."
+            autocomplete="off"
+          />
+          @if (name) {
+            <button class="icon-button" type="button" (click)="clearSearch()" aria-label="Clear person search">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </div>
+        <p class="field-hint">Results narrow automatically as you type. No exact spelling ceremony required.</p>
+      </form>
+
+      <div class="results-heading">
+        <div>
+          <p class="section-kicker">People in the index</p>
+          <h2>{{ name ? 'Matching people' : 'All people' }}</h2>
+        </div>
+      </div>
+
+      @if (users$ | async; as users) {
+        @if (users.length) {
+          <div class="people-list" aria-live="polite">
+            @for (user of users; track user.id) {
+              <a class="person-row" [routerLink]="['/user-detail', user.id]">
+                <span class="avatar">{{ initials(user.name) }}</span>
+                <span class="person-copy">
+                  <strong>{{ user.name }}</strong>
+                  <small>{{ user.domainName || 'Local account' }}</small>
+                </span>
+                <span class="view-action">
+                  View documents
+                  <mat-icon>arrow_forward</mat-icon>
+                </span>
+              </a>
+            }
+          </div>
+        } @else {
+          <div class="empty-people" role="status">
+            <span class="empty-icon"><mat-icon>person_off</mat-icon></span>
+            <h3>No matching person</h3>
+            <p>Try a shorter name, or search the documents directly instead.</p>
+            <a class="text-link" [routerLink]="['/files']">
+              Search all documents <mat-icon>arrow_forward</mat-icon>
+            </a>
+          </div>
+        }
+      } @else {
+        <div class="loading-rows" aria-label="Loading people">
+          <span></span><span></span><span></span>
+        </div>
+      }
+    </div>
+
+    <aside class="direct-search-card">
+      <span class="aside-icon"><mat-icon>manage_search</mat-icon></span>
+      <p class="section-kicker">Not sure who owns it?</p>
+      <h2>Search every document at once.</h2>
+      <p>Look across file names, titles, authors, and indexed document text.</p>
+      <a class="direct-link" [routerLink]="['/files']">
+        Search documents
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+    </aside>
+  </div>
+</section>

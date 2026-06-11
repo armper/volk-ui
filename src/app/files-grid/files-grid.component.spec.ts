@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { FilesGridComponent } from './files-grid.component';
-import { User } from '../user';
+import { SearchFile } from '../search-file';
 
 describe('FilesGridComponent', () => {
   beforeEach(async () => {
@@ -10,31 +10,35 @@ describe('FilesGridComponent', () => {
     }).compileComponents();
   });
 
-  it('shows the files of the bound user', () => {
+  it('shows the bound files with their metadata', () => {
     const fixture = TestBed.createComponent(FilesGridComponent);
-    const user: User = {
-      id: '1',
-      name: 'alperea',
-      domainName: '',
-      searchFiles: [
-        {
-          id: null,
-          size: 10,
-          createdDateTime: '2026-06-11T10:00:00',
-          lastModified: '2026-06-11T10:00:00',
-          fileName: 'test.docx',
-          path: '/tmp/test.docx',
-          extension: 'docx',
-          server: '/tmp',
-          share: null,
-        },
-      ],
-    };
+    const files: SearchFile[] = [
+      {
+        id: '1',
+        userId: 'u1',
+        size: 2048,
+        createdDateTime: '2026-06-11T10:00:00',
+        lastModified: '2026-06-11T10:00:00',
+        fileName: 'test.docx',
+        path: '/tmp/test.docx',
+        extension: 'docx',
+        server: '/tmp',
+        share: null,
+        title: 'Volk Test Document',
+        author: 'Armando Perea',
+        keywords: null,
+        comments: null,
+        contentType: null,
+      },
+    ];
 
-    fixture.componentRef.setInput('user', user);
+    fixture.componentRef.setInput('files', files);
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.files.length).toBe(1);
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('test.docx');
+    const text = (fixture.nativeElement as HTMLElement).textContent;
+    expect(text).toContain('test.docx');
+    expect(text).toContain('Volk Test Document');
+    expect(text).toContain('Armando Perea');
+    expect(text).toContain('2 KB');
   });
 });

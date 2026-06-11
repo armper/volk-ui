@@ -1,0 +1,82 @@
+<section class="page documents-page">
+  <div class="page-intro">
+    <p class="eyebrow">Search documents</p>
+    <h1>What document are you looking for?</h1>
+    <p>
+      Search across file names, document titles, authors, and indexed text. Volk will show you exactly where the file lives.
+    </p>
+  </div>
+
+  <div class="surface-card search-panel">
+    <form (submit)="$event.preventDefault(); search(query)" aria-label="Search all documents">
+      <label class="field-label" for="document-search">Describe what you remember</label>
+      <div class="search-control document-control">
+        <mat-icon>manage_search</mat-icon>
+        <input
+          id="document-search"
+          name="query"
+          [(ngModel)]="query"
+          (input)="search(query)"
+          placeholder="A file name, author, title, or words inside the document..."
+          autocomplete="off"
+        />
+        @if (query) {
+          <button class="icon-button" type="button" (click)="clearSearch()" aria-label="Clear document search">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+        <button class="search-button" type="submit">
+          <span>Search</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+      <div class="searches-what" aria-label="Search coverage">
+        <span><mat-icon>description</mat-icon> File names and titles</span>
+        <span><mat-icon>subject</mat-icon> Text inside documents</span>
+        <span><mat-icon>person</mat-icon> Authors</span>
+      </div>
+    </form>
+  </div>
+
+  @if (searched) {
+    <div class="results-bar" aria-live="polite">
+      <div>
+        <p class="section-kicker">Search results</p>
+        <h2>{{ files.length }} {{ files.length === 1 ? 'document' : 'documents' }} found</h2>
+      </div>
+      <p>for “{{ query }}”</p>
+    </div>
+    <app-files-grid [files]="files"></app-files-grid>
+  } @else {
+    <div class="getting-started">
+      <div class="guide-heading">
+        <p class="section-kicker">A good place to start</p>
+        <h2>Search with whatever detail you have.</h2>
+      </div>
+      <div class="guide-grid">
+        <article>
+          <span>01</span>
+          <div>
+            <h3>Know the person?</h3>
+            <p>Use the person's name to browse everything associated with them.</p>
+            <a class="text-link" [routerLink]="['/']">Find by person <mat-icon>arrow_forward</mat-icon></a>
+          </div>
+        </article>
+        <article>
+          <span>02</span>
+          <div>
+            <h3>Remember a phrase?</h3>
+            <p>Enter words from the document. Volk searches its indexed text.</p>
+          </div>
+        </article>
+        <article>
+          <span>03</span>
+          <div>
+            <h3>Only know the file?</h3>
+            <p>A partial file name or title is enough to begin narrowing things down.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  }
+</section>

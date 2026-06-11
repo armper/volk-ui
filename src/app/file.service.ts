@@ -11,6 +11,20 @@ export class FileService {
 
   private searchFilesUrl = 'http://localhost:8091/searchfile/';
 
+  /** Files attributed to a user. */
+  searchFiles(userId: string): Observable<SearchFile[]> {
+    return this.http
+      .get<SearchFile[]>(this.searchFilesUrl, { params: { userid: userId } })
+      .pipe(catchError(this.handleError<SearchFile[]>(`searchFiles userId=${userId}`, [])));
+  }
+
+  /** Full-text search over file names, titles, and extracted content. */
+  searchContent(query: string): Observable<SearchFile[]> {
+    return this.http
+      .get<SearchFile[]>(`${this.searchFilesUrl}search`, { params: { q: query } })
+      .pipe(catchError(this.handleError<SearchFile[]>(`searchContent q=${query}`, [])));
+  }
+
   getFile(id: string): Observable<SearchFile | undefined> {
     return this.http.get<SearchFile>(`${this.searchFilesUrl}${id}`).pipe(
       catchError(this.handleError<SearchFile | undefined>(`getFile id=${id}`))

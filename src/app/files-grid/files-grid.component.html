@@ -1,20 +1,45 @@
-<mat-card class="files-card">
-  <mat-card-header>
-    <mat-card-title>{{ files.length }} Files</mat-card-title>
-  </mat-card-header>
+@if (files.length) {
+  <div class="files-grid">
+    @for (file of files; track file.id || file.path) {
+      <article class="file-card">
+        <div class="file-heading">
+          <span class="file-icon"><mat-icon>{{ fileIcon(file.extension) }}</mat-icon></span>
+          <div class="file-identity">
+            <h3>{{ file.title || file.fileName }}</h3>
+            @if (file.title) {
+              <p>{{ file.fileName }}</p>
+            }
+          </div>
+          <div class="card-badges">
+            <span class="access-badge" [title]="'Filesystem permissions: ' + (file.posixPermissions || file.accessControlSource)">
+              <mat-icon>{{ accessIcon(file) }}</mat-icon>{{ accessLabel(file) }}
+            </span>
+            <span class="extension">{{ file.extension || 'file' }}</span>
+          </div>
+        </div>
 
-  <mat-table [dataSource]="files">
-    <ng-container matColumnDef="path">
-      <mat-header-cell *matHeaderCellDef>Path</mat-header-cell>
-      <mat-cell *matCellDef="let file">{{ file.path }}</mat-cell>
-    </ng-container>
+        <div class="metadata">
+          @if (file.author) {
+            <span><mat-icon>person</mat-icon>{{ file.author }}</span>
+          }
+          <span><mat-icon>hard_drive</mat-icon>{{ fileSize(file.size) }}</span>
+          <span><mat-icon>schedule</mat-icon>Modified {{ file.lastModified | date: 'MMM d, y' }}</span>
+          @if (file.server) {
+            <span><mat-icon>dns</mat-icon>{{ file.server }}</span>
+          }
+        </div>
 
-    <ng-container matColumnDef="fileName">
-      <mat-header-cell *matHeaderCellDef>File name</mat-header-cell>
-      <mat-cell *matCellDef="let file">{{ file.fileName }}</mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-  </mat-table>
-</mat-card>
+        <div class="location">
+          <span class="location-label"><mat-icon>folder_open</mat-icon>File location</span>
+          <code>{{ file.path }}</code>
+        </div>
+      </article>
+    }
+  </div>
+} @else {
+  <div class="no-files" role="status">
+    <span><mat-icon>search_off</mat-icon></span>
+    <h3>No documents found</h3>
+    <p>Try fewer words, part of a file name, or the author's name.</p>
+  </div>
+}

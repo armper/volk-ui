@@ -20,7 +20,7 @@ describe('UserService', () => {
   afterEach(() => httpMock.verify());
 
   it('searches users by name', () => {
-    const users: User[] = [{ id: '1', name: 'alperea', domainName: '', searchFiles: [] }];
+    const users: User[] = [{ id: '1', name: 'alperea', domainName: '' }];
 
     service.searchUsers('alp').subscribe((result) => expect(result).toEqual(users));
 

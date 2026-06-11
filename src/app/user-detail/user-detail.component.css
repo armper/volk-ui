@@ -1,3 +1,177 @@
-.user-card {
-  margin-bottom: 16px;
+.detail-page {
+  padding-top: 42px;
+}
+
+.back-link {
+  width: fit-content;
+  margin-bottom: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-600);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--teal-600);
+}
+
+.back-link mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.person-header {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.large-avatar {
+  width: 84px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 25px;
+  color: var(--teal-600);
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  background: var(--teal-100);
+  box-shadow: 0 10px 25px rgba(14, 119, 109, 0.1);
+}
+
+.person-title h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.person-title > p:last-child {
+  margin: 14px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  color: var(--ink-500);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.person-title > p:last-child span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.person-title mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
+.detail-explainer {
+  margin: 32px 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  border: 1px solid #cde3dd;
+  border-radius: 13px;
+  color: var(--ink-600);
+  background: rgba(223, 243, 239, 0.5);
+}
+
+.detail-explainer mat-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: var(--teal-600);
+  font-size: 18px;
+}
+
+.detail-explainer p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.profile-loading {
+  height: 90px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-loading > span {
+  width: 82px;
+  height: 82px;
+  border-radius: 24px;
+  background: #e9f0ed;
+}
+
+.profile-loading div {
+  flex: 1;
+  display: grid;
+  gap: 10px;
+}
+
+.profile-loading i,
+.files-loading span {
+  display: block;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e9f0ed 25%, #f7f9f8 50%, #e9f0ed 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s infinite;
+}
+
+.profile-loading i:first-child {
+  width: 48%;
+  height: 28px;
+}
+
+.profile-loading i:last-child {
+  width: 31%;
+  height: 14px;
+}
+
+.files-loading {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.files-loading span {
+  height: 240px;
+  border-radius: 20px;
+}
+
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+
+@media (max-width: 620px) {
+  .person-header {
+    align-items: flex-start;
+  }
+
+  .large-avatar {
+    width: 66px;
+    height: 66px;
+    border-radius: 20px;
+    font-size: 1rem;
+  }
+
+  .person-title h1 {
+    font-size: 2.1rem;
+  }
+
+  .files-loading {
+    grid-template-columns: 1fr;
+  }
 }

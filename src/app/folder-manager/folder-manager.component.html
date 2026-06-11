@@ -1,0 +1,139 @@
+<section class="page folders-page">
+  <div class="page-intro">
+    <p class="eyebrow">Watched folders</p>
+    <h1>Choose where Volk looks for documents.</h1>
+    <p>
+      Add any folder this computer can access. Volk will index supported documents there and keep watching for changes.
+    </p>
+  </div>
+
+  @if (error) {
+    <div class="notice error-notice" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+  }
+  @if (message) {
+    <div class="notice success-notice" role="status">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ message }}</span>
+    </div>
+  }
+
+  <div class="folder-layout">
+    <section class="surface-card watched-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="section-kicker">Active now</p>
+          <h2>Folders being watched</h2>
+        </div>
+        <span class="folder-count">{{ watchedFolders.length }}</span>
+      </div>
+
+      @if (loadingFolders) {
+        <div class="folder-loading"><span></span><span></span></div>
+      } @else if (watchedFolders.length) {
+        <div class="watched-list">
+          @for (folder of watchedFolders; track folder.path) {
+            <article class="watched-folder">
+              <span class="folder-icon"><mat-icon>folder_special</mat-icon></span>
+              <div class="watched-copy">
+                <div class="folder-title-line">
+                  <h3>{{ folderName(folder.path) }}</h3>
+                  <span class="live-badge"><i></i>{{ folder.status === 'Started' ? 'Watching' : folder.status }}</span>
+                </div>
+                <code>{{ folder.path }}</code>
+                <p>
+                  <mat-icon>{{ folder.recursive ? 'account_tree' : 'horizontal_rule' }}</mat-icon>
+                  {{ folder.recursive ? 'Includes all subfolders' : 'This folder only' }}
+                </p>
+              </div>
+              <button class="stop-button" type="button" (click)="removeFolder(folder)" title="Stop watching this folder">
+                <mat-icon>remove_circle_outline</mat-icon>
+                <span>Stop</span>
+              </button>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-folders">
+          <span><mat-icon>folder_off</mat-icon></span>
+          <h3>No folders are being watched</h3>
+          <p>Choose a folder from the browser to start indexing documents.</p>
+        </div>
+      }
+
+      <div class="retention-note">
+        <mat-icon>info</mat-icon>
+        <p>Stopping a folder prevents future scans. Documents already indexed remain searchable.</p>
+      </div>
+    </section>
+
+    <section class="surface-card browser-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="section-kicker">Add a folder</p>
+          <h2>Browse this computer</h2>
+        </div>
+        <mat-icon class="heading-icon">create_new_folder</mat-icon>
+      </div>
+
+      <form class="path-form" (submit)="$event.preventDefault(); browseTypedPath()">
+        <label for="folder-path">Folder path</label>
+        <div>
+          <mat-icon>folder_open</mat-icon>
+          <input id="folder-path" name="folderPath" [(ngModel)]="pathInput" autocomplete="off" />
+          <button type="submit">Go</button>
+        </div>
+      </form>
+
+      <div class="browser-toolbar">
+        <button type="button" (click)="browse(listing?.home)" [disabled]="!listing">
+          <mat-icon>home</mat-icon> Home
+        </button>
+        <button type="button" (click)="browse(listing?.parent || undefined)" [disabled]="!listing?.parent">
+          <mat-icon>drive_folder_upload</mat-icon> Up one level
+        </button>
+      </div>
+
+      <div class="directory-list" [class.loading]="browsing">
+        @if (browsing) {
+          <div class="browsing-message"><span></span><span></span><span></span></div>
+        } @else if (listing?.directories?.length) {
+          @for (directory of listing!.directories; track directory.path) {
+            <button type="button" class="directory-row" (click)="browse(directory.path)">
+              <mat-icon>folder</mat-icon>
+              <span>{{ directory.name }}</span>
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          }
+        } @else {
+          <div class="no-subfolders">
+            <mat-icon>folder</mat-icon>
+            <span>This folder has no browsable subfolders.</span>
+          </div>
+        }
+      </div>
+
+      <div class="selection-footer">
+        <label class="recursive-option">
+          <input type="checkbox" [(ngModel)]="recursive" name="recursive" />
+          <span class="checkbox-mark"><mat-icon>check</mat-icon></span>
+          <span>
+            <strong>Include subfolders</strong>
+            <small>Recommended for most folders</small>
+          </span>
+        </label>
+        <button
+          class="watch-button"
+          type="button"
+          (click)="addCurrentFolder()"
+          [disabled]="!listing || saving || isWatching(listing.path)"
+        >
+          <mat-icon>{{ isWatching(listing?.path || '') ? 'check' : 'add' }}</mat-icon>
+          {{ isWatching(listing?.path || '') ? 'Already watching' : saving ? 'Starting...' : 'Watch this folder' }}
+        </button>
+      </div>
+    </section>
+  </div>
+</section>

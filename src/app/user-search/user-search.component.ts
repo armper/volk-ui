@@ -2,18 +2,16 @@ import { Component, OnInit, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
 
 import { User } from '../user';
 import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-user-search',
-  imports: [AsyncPipe, FormsModule, RouterLink, MatFormFieldModule, MatInputModule, MatListModule],
+  imports: [AsyncPipe, FormsModule, RouterLink, MatIconModule],
   templateUrl: './user-search.component.html',
   styleUrls: ['./user-search.component.css'],
 })
@@ -28,7 +26,7 @@ export class UserSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.users$ = this.searchTerms.pipe(
-      // wait 300ms after each keystroke before considering the term
+      startWith(''),
       debounceTime(300),
       distinctUntilChanged(),
       switchMap((term) => this.userService.searchUsers(term))
@@ -37,5 +35,19 @@ export class UserSearchComponent implements OnInit {
 
   search(term: string): void {
     this.searchTerms.next(term);
+  }
+
+  clearSearch(): void {
+    this.name = '';
+    this.search('');
+  }
+
+  initials(name: string): string {
+    return name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('');
   }
 }
