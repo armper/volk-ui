@@ -1,27 +1,49 @@
-# ExchangeUI
+# Volk UI
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.1.
+Angular front end of the **Volk eDiscovery platform**. Lets you search the users
+discovered by [volk-sniffer](https://github.com/armper/volk-sniffer) and browse the
+files attributed to them, served by [volk-rest](https://github.com/armper/volk-rest).
 
-## Development server
+```
+directories ──> volk-sniffer ──> MongoDB <── volk-rest <── volk-ui (Angular)
+                (Camel + POI)     (volk db)   (WebFlux, :8091)   (:4200)
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Tech stack
 
-## Code scaffolding
+- Angular 20 (standalone components, new control flow)
+- Angular Material 20
+- RxJS 7
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Features
 
-## Build
+- **User search** (`/`) — type-ahead search (debounced 300 ms) against
+  `GET /searchuser/?name=...`
+- **User detail** (`/user-detail/:id`) — user card plus a Material table of every
+  file attributed to that user (path, file name)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+## Running
 
-## Running unit tests
+Requires Node 20.19+ / 22.12+ / 24+ and the volk-rest API on `http://localhost:8091`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+npm install
+npm start          # dev server on http://localhost:4200
+```
 
-## Running end-to-end tests
+The API base URL is set in `src/app/user.service.ts` and `src/app/file.service.ts`.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Build & test
 
-## Further help
+```bash
+npm run build      # production build into dist/volk-ui
+npm test           # karma unit tests (ChromeHeadless)
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## History
+
+Generated in 2018 with Angular CLI 1.7 / Angular 5 ("ExchangeUI"). Rewritten in 2026
+for Angular 20: standalone components bootstrapped with `bootstrapApplication`,
+`provideRouter`/`provideHttpClient`, `inject()`-based services, `@for`/`@if` control
+flow, strict TypeScript, and removal of unused dependencies (mongoose, big-integer,
+angular2-uuid).

@@ -1,35 +1,35 @@
-import { FileService } from './../file.service';
-import { SearchFile } from './../search-file';
-import { FilesGridComponent } from './../files-grid/files-grid.component';
-import { UserServiceService } from './../user-service.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import mongoose from 'mongoose';
+import { MatCardModule } from '@angular/material/card';
+
 import { User } from '../user';
+import { UserService } from '../user.service';
+import { FilesGridComponent } from '../files-grid/files-grid.component';
 
 @Component({
   selector: 'app-user-detail',
+  imports: [MatCardModule, FilesGridComponent],
   templateUrl: './user-detail.component.html',
-  styleUrls: ['./user-detail.component.css']
+  styleUrls: ['./user-detail.component.css'],
 })
-
 export class UserDetailComponent implements OnInit {
-  user: User;
+  private route = inject(ActivatedRoute);
 
-  constructor(
-    private route: ActivatedRoute,
-    private userService: UserServiceService,
-  ) { }
+  private userService = inject(UserService);
 
-  ngOnInit() {
+  user?: User;
+
+  ngOnInit(): void {
     this.loadUser();
   }
 
   loadUser(): void {
-    const id: string = this.route.snapshot.paramMap.get('id');
-    this.userService.getUser(id)
-      .subscribe(user => {
-        this.user = user;
-      });
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) {
+      return;
+    }
+    this.userService.getUser(id).subscribe((user) => {
+      this.user = user;
+    });
   }
 }

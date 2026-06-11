@@ -1,0 +1,8 @@
+mat-toolbar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-content {
+  padding: 16px;
+}

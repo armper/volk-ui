@@ -1,27 +1,24 @@
-import { FileService } from './../file.service';
-import { SearchFile } from './../search-file';
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+
+import { SearchFile } from '../search-file';
 import { User } from '../user';
 
 @Component({
   selector: 'app-files-grid',
+  imports: [MatCardModule, MatTableModule],
   templateUrl: './files-grid.component.html',
-  styleUrls: ['./files-grid.component.css']
+  styleUrls: ['./files-grid.component.css'],
 })
 export class FilesGridComponent implements OnChanges {
-  @Input() user: User;
+  @Input() user?: User;
 
-  files: SearchFile[] = new Array<SearchFile>();
+  files: SearchFile[] = [];
 
-  private displayedColumns = ['path', 'fileName'];
+  displayedColumns = ['path', 'fileName'];
 
-  constructor(private fileService: FileService
-  ) { }
-
-  ngOnChanges(changes: SimpleChanges) {
-
-    if (this.user != null) {
-      this.files = this.user.searchFiles;
-    }
+  ngOnChanges(): void {
+    this.files = this.user?.searchFiles ?? [];
   }
 }

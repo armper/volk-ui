@@ -1,3 +1,9 @@
-<header><mat-toolbar color="primary"><span><a [routerLink]="['/']">Panda eDiscovery Tool</a></span></mat-toolbar></header>
-<body></body>
-  <router-outlet class=“app-content”></router-outlet>
+<header>
+  <mat-toolbar color="primary">
+    <a [routerLink]="['/']">{{ title }}</a>
+  </mat-toolbar>
+</header>
+
+<main class="app-content">
+  <router-outlet></router-outlet>
+</main>
