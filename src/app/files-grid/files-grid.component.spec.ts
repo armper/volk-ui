@@ -52,5 +52,6 @@ describe('FilesGridComponent', () => {
     expect(text).toContain('annual/test.docx');
     expect(text).toContain('2 KB');
     expect((fixture.nativeElement as HTMLElement).querySelector('.search-match')?.textContent).toBe('Volk');
+    expect((fixture.nativeElement as HTMLElement).querySelector('.preview-button')?.textContent).toContain('Preview document');
   });
 });

@@ -249,6 +249,43 @@
   white-space: nowrap;
 }
 
+.preview-button {
+  width: 100%;
+  margin-top: 13px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #cfe2dd;
+  border-radius: 11px;
+  color: var(--teal-600);
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-align: left;
+  background: #f2faf7;
+  cursor: pointer;
+  transition: 150ms ease;
+}
+
+.preview-button:hover,
+.preview-button:focus-visible {
+  border-color: #9fc8be;
+  outline: 0;
+  background: #e3f4ef;
+}
+
+.preview-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.preview-button mat-icon {
+  width: 17px;
+  height: 17px;
+  font-size: 17px;
+}
+
 .no-files {
   padding: 62px 20px;
   border: 1px dashed #c7d7d2;

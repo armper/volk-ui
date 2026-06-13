@@ -3,10 +3,11 @@ import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
 import { SearchFile } from '../search-file';
+import { FilePreviewComponent } from '../file-preview/file-preview.component';
 
 @Component({
   selector: 'app-files-grid',
-  imports: [DatePipe, MatIconModule],
+  imports: [DatePipe, MatIconModule, FilePreviewComponent],
   templateUrl: './files-grid.component.html',
   styleUrls: ['./files-grid.component.css'],
 })
@@ -14,6 +15,16 @@ export class FilesGridComponent {
   @Input() files: SearchFile[] = [];
 
   @Input() highlight = '';
+
+  previewFile?: SearchFile;
+
+  openPreview(file: SearchFile): void {
+    this.previewFile = file;
+  }
+
+  closePreview(): void {
+    this.previewFile = undefined;
+  }
 
   fileIcon(extension: string): string {
     const type = extension.toLowerCase();

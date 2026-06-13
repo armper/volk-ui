@@ -30,10 +30,14 @@ folder, modified date, size, author, keywords, and source. Results can be sorted
 relevance, date, name, size, or owner, and matching terms are highlighted in each result.
 Available filter choices and returned documents are both permission-aware.
 
-## 4. Document previews
+## 4. Document previews - Completed (June 13, 2026)
 
-Preview PDFs, Office documents, images, and extracted text without opening the original
-file.
+Documents can now be reviewed in a focused preview panel without opening the original file.
+PDFs render inline with an optional extracted-text view, images scale inside the viewer, and
+Office and text documents use the content captured during indexing. Preview metadata and
+file bytes are permission-checked, and inline files must still exist inside their indexed
+source folder. The scanner now indexes common image formats while leaving OCR for its
+dedicated roadmap item.
 
 ## 5. Accurate folder synchronization
 

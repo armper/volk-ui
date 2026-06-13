@@ -1,0 +1,85 @@
+<div class="preview-backdrop" aria-hidden="true" (click)="close()"></div>
+
+<section class="preview-dialog" role="dialog" aria-modal="true" cdkTrapFocus [cdkTrapFocusAutoCapture]="true"
+  [attr.aria-label]="'Preview ' + file.fileName">
+  <header class="preview-header">
+    <span class="preview-file-icon"><mat-icon>preview</mat-icon></span>
+    <div>
+      <p>{{ typeLabel() }}</p>
+      <h2>{{ preview?.title || file.title || file.fileName }}</h2>
+      @if (file.title) {
+        <small>{{ file.fileName }}</small>
+      }
+    </div>
+    <button class="preview-close" type="button" aria-label="Close preview" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  @if (loading) {
+    <div class="preview-loading" role="status">
+      <span></span>
+      <strong>Preparing preview...</strong>
+      <small>Checking the indexed document and its access permissions.</small>
+    </div>
+  } @else if (failed) {
+    <div class="preview-empty" role="status">
+      <span><mat-icon>draft</mat-icon></span>
+      <h3>Preview unavailable</h3>
+      <p>The file may have moved, or Volk could not read enough of it to build a preview.</p>
+    </div>
+  } @else if (preview) {
+    @if (showVisual() && showText()) {
+      <nav class="preview-tabs" aria-label="Preview format">
+        <button type="button" [class.active]="activeView === 'visual'"
+          [attr.aria-pressed]="activeView === 'visual'" (click)="activeView = 'visual'">
+          <mat-icon>{{ preview.previewType === 'PDF' ? 'picture_as_pdf' : 'image' }}</mat-icon>
+          Original view
+        </button>
+        <button type="button" [class.active]="activeView === 'text'"
+          [attr.aria-pressed]="activeView === 'text'" (click)="activeView = 'text'">
+          <mat-icon>subject</mat-icon>
+          Extracted text
+        </button>
+      </nav>
+    }
+
+    <div class="preview-canvas">
+      @if (activeView === 'visual' && preview.previewType === 'PDF') {
+        <iframe [src]="safeContentUrl" [title]="'PDF preview of ' + file.fileName"></iframe>
+      } @else if (activeView === 'visual' && preview.previewType === 'IMAGE') {
+        <div class="image-stage">
+          <img [src]="imageUrl" [alt]="'Preview of ' + file.fileName">
+        </div>
+      } @else if (showText()) {
+        <div class="text-preview">
+          <div class="text-note">
+            <mat-icon>auto_awesome</mat-icon>
+            <span>
+              <strong>Readable preview</strong>
+              Extracted during indexing, so Office and text files can be reviewed without opening them.
+            </span>
+          </div>
+          <pre>{{ preview.text }}</pre>
+          @if (preview.textTruncated) {
+            <p class="truncated-note">Preview shortened to the first 50,000 characters.</p>
+          }
+        </div>
+      } @else {
+        <div class="preview-empty">
+          <span><mat-icon>visibility_off</mat-icon></span>
+          <h3>No preview content</h3>
+          <p>Volk indexed the file metadata, but this format did not provide a visual or text preview.</p>
+        </div>
+      }
+    </div>
+
+    <footer class="preview-footer">
+      <span><mat-icon>verified_user</mat-icon>Permission checked</span>
+      <span>{{ (preview.extension || 'file').toUpperCase() }}</span>
+      @if (file.sourceName) {
+        <span><mat-icon>hub</mat-icon>{{ file.sourceName }}</span>
+      }
+    </footer>
+  }
+</section>

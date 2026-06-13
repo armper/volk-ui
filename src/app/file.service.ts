@@ -33,6 +33,18 @@ export interface DocumentSearchOptions {
   maxSize: number;
 }
 
+export interface DocumentPreview {
+  id: string;
+  fileName: string;
+  title: string | null;
+  extension: string;
+  contentType: string | null;
+  previewType: 'PDF' | 'IMAGE' | 'TEXT' | 'UNAVAILABLE';
+  text: string | null;
+  textTruncated: boolean;
+  originalAvailable: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class FileService {
   private http = inject(HttpClient);
@@ -71,6 +83,16 @@ export class FileService {
     return this.http.get<SearchFile>(`${this.searchFilesUrl}${id}`).pipe(
       catchError(this.handleError<SearchFile | undefined>(`getFile id=${id}`))
     );
+  }
+
+  getPreview(id: string): Observable<DocumentPreview | undefined> {
+    return this.http.get<DocumentPreview>(`${this.searchFilesUrl}${id}/preview`).pipe(
+      catchError(this.handleError<DocumentPreview | undefined>(`getPreview id=${id}`))
+    );
+  }
+
+  previewContentUrl(id: string): string {
+    return `${this.searchFilesUrl}${encodeURIComponent(id)}/content`;
   }
 
   /**

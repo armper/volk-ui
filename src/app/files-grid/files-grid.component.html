@@ -77,9 +77,19 @@
             <code>{{ file.path }}</code>
           }
         </div>
+
+        <button class="preview-button" type="button" [disabled]="!file.id" (click)="openPreview(file)">
+          <mat-icon>visibility</mat-icon>
+          Preview document
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
       </article>
     }
   </div>
+
+  @if (previewFile) {
+    <app-file-preview [file]="previewFile" (closed)="closePreview()"></app-file-preview>
+  }
 } @else {
   <div class="no-files" role="status">
     <span><mat-icon>search_off</mat-icon></span>
