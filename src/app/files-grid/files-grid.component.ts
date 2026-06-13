@@ -13,6 +13,8 @@ import { SearchFile } from '../search-file';
 export class FilesGridComponent {
   @Input() files: SearchFile[] = [];
 
+  @Input() highlight = '';
+
   fileIcon(extension: string): string {
     const type = extension.toLowerCase();
     if (['doc', 'docx', 'docm', 'txt'].includes(type)) return 'article';
@@ -63,4 +65,26 @@ export class FilesGridComponent {
     };
     return basis ? labels[basis] || basis : 'Document owner';
   }
+
+  highlightSegments(value: string | null | undefined): HighlightSegment[] {
+    if (!value) return [];
+    const terms = this.highlight.trim().split(/\s+/)
+      .map((term) => term.trim())
+      .filter(Boolean)
+      .sort((left, right) => right.length - left.length);
+    if (!terms.length) return [{ text: value, match: false }];
+    const expression = new RegExp(`(${terms.map(this.escapeExpression).join('|')})`, 'gi');
+    return value.split(expression)
+      .filter((text) => text.length > 0)
+      .map((text) => ({ text, match: terms.some((term) => text.toLowerCase() === term.toLowerCase()) }));
+  }
+
+  private escapeExpression(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+}
+
+interface HighlightSegment {
+  text: string;
+  match: boolean;
 }

@@ -67,6 +67,14 @@
   white-space: nowrap;
 }
 
+.search-match {
+  padding: 0 1px;
+  border-radius: 3px;
+  color: inherit;
+  background: #ffe9a8;
+  box-shadow: 0 0 0 1px rgba(190, 142, 33, 0.08);
+}
+
 .extension {
   padding: 5px 8px;
   border-radius: 8px;

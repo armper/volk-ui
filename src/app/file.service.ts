@@ -1,9 +1,37 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { SearchFile } from './search-file';
+
+export interface DocumentSearchFilters {
+  extension?: string;
+  owner?: string;
+  sourceId?: string;
+  folder?: string;
+  modifiedFrom?: string;
+  modifiedTo?: string;
+  minSize?: number;
+  maxSize?: number;
+  author?: string;
+  keywords?: string;
+  sort?: string;
+}
+
+export interface SearchSourceOption {
+  id: string;
+  name: string;
+  type: string;
+}
+
+export interface DocumentSearchOptions {
+  extensions: string[];
+  owners: string[];
+  authors: string[];
+  sources: SearchSourceOption[];
+  maxSize: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class FileService {
@@ -18,11 +46,25 @@ export class FileService {
       .pipe(catchError(this.handleError<SearchFile[]>(`searchFiles userId=${userId}`, [])));
   }
 
-  /** Full-text search over file names, titles, and extracted content. */
-  searchContent(query: string): Observable<SearchFile[]> {
+  /** Permission-aware text search, filtering, and sorting. */
+  searchContent(query: string, filters: DocumentSearchFilters = {}): Observable<SearchFile[]> {
+    let params = new HttpParams().set('q', query);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params = params.set(key, String(value));
+      }
+    });
     return this.http
-      .get<SearchFile[]>(`${this.searchFilesUrl}search`, { params: { q: query } })
+      .get<SearchFile[]>(`${this.searchFilesUrl}search`, { params })
       .pipe(catchError(this.handleError<SearchFile[]>(`searchContent q=${query}`, [])));
+  }
+
+  searchOptions(): Observable<DocumentSearchOptions> {
+    return this.http
+      .get<DocumentSearchOptions>(`${this.searchFilesUrl}search/options`)
+      .pipe(catchError(this.handleError<DocumentSearchOptions>('searchOptions', {
+        extensions: [], owners: [], authors: [], sources: [], maxSize: 0,
+      })));
   }
 
   getFile(id: string): Observable<SearchFile | undefined> {

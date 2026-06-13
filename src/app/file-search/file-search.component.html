@@ -8,7 +8,7 @@
   </div>
 
   <div class="surface-card search-panel">
-    <form (submit)="$event.preventDefault(); search(query)" aria-label="Search all documents">
+    <form (submit)="$event.preventDefault(); submitSearch()" aria-label="Search all documents">
       <label class="field-label" for="document-search">Describe what you remember</label>
       <div class="search-control document-control">
         <mat-icon>manage_search</mat-icon>
@@ -35,18 +35,121 @@
         <span><mat-icon>subject</mat-icon> Text inside documents</span>
         <span><mat-icon>person</mat-icon> Authors</span>
       </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-heading">
+        <div>
+          <mat-icon>tune</mat-icon>
+          <span>Narrow the results</span>
+          @if (activeFilterCount()) {
+            <strong>{{ activeFilterCount() }}</strong>
+          }
+        </div>
+        <div class="filter-actions">
+          @if (query || activeFilterCount()) {
+            <button type="button" class="clear-filters" (click)="clearAll()">Clear all</button>
+          }
+          <button type="button" class="more-button" (click)="moreFilters = !moreFilters">
+            {{ moreFilters ? 'Fewer filters' : 'More filters' }}
+            <mat-icon>{{ moreFilters ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="quick-filters">
+        <label>
+          <span>File type</span>
+          <select [(ngModel)]="extension" name="extension" (change)="applyFilters()">
+            <option value="">All file types</option>
+            @for (type of options.extensions; track type) {
+              <option [value]="type">{{ type.toUpperCase() }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>Source</span>
+          <select [(ngModel)]="sourceId" name="sourceId" (change)="applyFilters()">
+            <option value="">All sources</option>
+            @for (source of options.sources; track source.id) {
+              <option [value]="source.id">{{ source.name }} · {{ sourceTypeLabel(source.type) }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>Owner</span>
+          <select [(ngModel)]="owner" name="owner" (change)="applyFilters()">
+            <option value="">All owners</option>
+            @for (person of options.owners; track person) {
+              <option [value]="person">{{ person }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>Sort by</span>
+          <select [(ngModel)]="sort" name="sort" (change)="applyFilters()">
+            <option value="relevance">Best match</option>
+            <option value="newest">Newest modified</option>
+            <option value="oldest">Oldest modified</option>
+            <option value="name">File name</option>
+            <option value="owner">Owner</option>
+            <option value="size-desc">Largest first</option>
+            <option value="size-asc">Smallest first</option>
+          </select>
+        </label>
+      </div>
+
+      @if (moreFilters) {
+        <div class="advanced-filters">
+          <label>
+            <span>Folder or path</span>
+            <div class="text-filter"><mat-icon>folder</mat-icon><input [(ngModel)]="folder" name="folder" (input)="applyFilters()" placeholder="Part of a folder name" /></div>
+          </label>
+          <label>
+            <span>Document author</span>
+            <div class="text-filter"><mat-icon>person</mat-icon><input [(ngModel)]="author" name="author" (input)="applyFilters()" placeholder="Part of an author name" /></div>
+          </label>
+          <label>
+            <span>Keywords</span>
+            <div class="text-filter"><mat-icon>sell</mat-icon><input [(ngModel)]="keywords" name="keywords" (input)="applyFilters()" placeholder="Metadata keywords" /></div>
+          </label>
+          <label>
+            <span>File size</span>
+            <select [(ngModel)]="sizeRange" name="sizeRange" (change)="applyFilters()">
+              <option value="">Any size</option>
+              <option value="0-102400">Under 100 KB</option>
+              <option value="102401-1048576">100 KB to 1 MB</option>
+              <option value="1048577-10485760">1 MB to 10 MB</option>
+              <option value="10485761-">Over 10 MB</option>
+            </select>
+          </label>
+          <label>
+            <span>Modified after</span>
+            <input class="date-filter" type="date" [(ngModel)]="modifiedFrom" name="modifiedFrom" (change)="applyFilters()" />
+          </label>
+          <label>
+            <span>Modified before</span>
+            <input class="date-filter" type="date" [(ngModel)]="modifiedTo" name="modifiedTo" (change)="applyFilters()" />
+          </label>
+        </div>
+      }
     </form>
   </div>
 
-  @if (searched) {
+  @if (loading) {
+    <div class="search-loading" role="status">
+      <span></span><span></span><span></span>
+      <p>Searching the documents you can access...</p>
+    </div>
+  } @else if (searched) {
     <div class="results-bar" aria-live="polite">
       <div>
         <p class="section-kicker">Search results</p>
         <h2>{{ files.length }} {{ files.length === 1 ? 'document' : 'documents' }} found</h2>
       </div>
-      <p>for “{{ query }}”</p>
+      <p>{{ query ? 'for “' + query + '”' : 'using the selected filters' }}</p>
     </div>
-    <app-files-grid [files]="files"></app-files-grid>
+    <app-files-grid [files]="files" [highlight]="query"></app-files-grid>
   } @else {
     <div class="getting-started">
       <div class="guide-heading">

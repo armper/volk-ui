@@ -5,9 +5,17 @@
         <div class="file-heading">
           <span class="file-icon"><mat-icon>{{ fileIcon(file.extension) }}</mat-icon></span>
           <div class="file-identity">
-            <h3>{{ file.title || file.fileName }}</h3>
+            <h3>
+              @for (segment of highlightSegments(file.title || file.fileName); track $index) {
+                <span [class.search-match]="segment.match">{{ segment.text }}</span>
+              }
+            </h3>
             @if (file.title) {
-              <p>{{ file.fileName }}</p>
+              <p>
+                @for (segment of highlightSegments(file.fileName); track $index) {
+                  <span [class.search-match]="segment.match">{{ segment.text }}</span>
+                }
+              </p>
             }
           </div>
           <div class="card-badges">
@@ -22,7 +30,11 @@
           <div class="source-context" [title]="file.sourceAccessSummary || 'Indexed document source'">
             <span class="source-mark"><mat-icon>hub</mat-icon></span>
             <div>
-              <strong>{{ file.sourceName }}</strong>
+              <strong>
+                @for (segment of highlightSegments(file.sourceName); track $index) {
+                  <span [class.search-match]="segment.match">{{ segment.text }}</span>
+                }
+              </strong>
               <small>{{ sourceTypeLabel(file.sourceType) }}</small>
             </div>
             @if (file.department) {
@@ -33,7 +45,11 @@
 
         <div class="metadata">
           @if (file.contentOwner) {
-            <span [title]="ownershipLabel(file.ownershipBasis)"><mat-icon>badge</mat-icon>{{ file.contentOwner }}</span>
+            <span [title]="ownershipLabel(file.ownershipBasis)"><mat-icon>badge</mat-icon><span>
+              @for (segment of highlightSegments(file.contentOwner); track $index) {
+                <span [class.search-match]="segment.match">{{ segment.text }}</span>
+              }
+            </span></span>
           }
           @if (file.author && file.author !== file.contentOwner) {
             <span title="Document author"><mat-icon>person</mat-icon>{{ file.author }}</span>
@@ -51,7 +67,11 @@
             {{ file.relativePath ? 'Location inside source' : 'File location' }}
           </span>
           @if (file.relativePath) {
-            <code>{{ file.relativePath }}</code>
+            <code>
+              @for (segment of highlightSegments(file.relativePath); track $index) {
+                <span [class.search-match]="segment.match">{{ segment.text }}</span>
+              }
+            </code>
             <small>{{ file.path }}</small>
           } @else {
             <code>{{ file.path }}</code>

@@ -23,10 +23,12 @@ and resolved content owner. When no owner is assigned, Volk falls back to docume
 and then filesystem ownership. Search results make those distinctions visible instead of
 flattening every kind of ownership into one ambiguous name.
 
-## 3. Powerful search and filtering
+## 3. Powerful search and filtering - Completed (June 13, 2026)
 
-Filter and sort by file type, owner, folder, date, size, author, keywords, and source.
-Highlight the matching terms in each result.
+Search now supports simple keyword searches plus optional filters for file type, owner,
+folder, modified date, size, author, keywords, and source. Results can be sorted by
+relevance, date, name, size, or owner, and matching terms are highlighted in each result.
+Available filter choices and returned documents are both permission-aware.
 
 ## 4. Document previews
 

@@ -39,6 +39,7 @@ describe('FilesGridComponent', () => {
     ];
 
     fixture.componentRef.setInput('files', files);
+    fixture.componentRef.setInput('highlight', 'Volk');
     fixture.detectChanges();
 
     const text = (fixture.nativeElement as HTMLElement).textContent;
@@ -50,5 +51,6 @@ describe('FilesGridComponent', () => {
     expect(text).toContain('Finance');
     expect(text).toContain('annual/test.docx');
     expect(text).toContain('2 KB');
+    expect((fixture.nativeElement as HTMLElement).querySelector('.search-match')?.textContent).toBe('Volk');
   });
 });
